@@ -1,6 +1,7 @@
 # Dil Bahçesi – otomatik derleme
 # Bu dosya GitHub'a her yüklemede Android (.apk), Windows (.exe), Mac (.zip)
 # ve Linux (.AppImage) kurulum dosyalarını üretir ve "Releases" sayfasında yayınlar.
+# iPhone / iPad için uygulamayı GitHub Pages web adresinde de yayınlar.
 name: Uygulamayı derle
 
 on:
@@ -44,6 +45,25 @@ jobs:
         with:
           name: android
           path: DilBahcesi-Android.apk
+
+  web:
+    name: Web (iPhone / iPad)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: www
+      - id: deployment
+        uses: actions/deploy-pages@v4
 
   masaustu:
     name: Masaüstü (${{ matrix.os }})
@@ -100,5 +120,5 @@ jobs:
             - Windows: `DilBahcesi-...-win-x64.exe`
             - Mac: `DilBahcesi-...-mac-arm64.zip` (M1/M2/M3…) veya `...-mac-x64.zip` (Intel)
             - Linux: `DilBahcesi-...-linux-x86_64.AppImage`
-            iPhone / iPad için uygulamanın web adresini Safari'de açıp Paylaş → "Ana Ekrana Ekle" seçin.
+            - iPhone / iPad: https://asmahilkohan1988-ctrl.github.io/Dil-Bah-esi/ adresini Safari'de açıp Paylaş → "Ana Ekrana Ekle" seçin.
           files: dosyalar/*
